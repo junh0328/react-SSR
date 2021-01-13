@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import rootReducer from './modules';
 
-const store = createStore(rootReducer, applyMiddleware(thunk)); // 루트 리듀서에 thunk 미들웨어를 적용하겠다.
+const store = createStore(rootReducer, window.__PRELOADED_STATE__, applyMiddleware(thunk)); // 루트 리듀서에 thunk 미들웨어를 적용하겠다.
 
 ReactDOM.render(
   <Provider store={store}>
