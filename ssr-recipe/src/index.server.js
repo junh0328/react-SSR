@@ -6,6 +6,8 @@ import App from './App';
 import path from 'path';
 import fs from 'fs';
 
+const port = 5000;
+
 // asset-manifest.json에서 파일 경로들을 조회합니다.
 const manifest = JSON.parse(fs.readFileSync(path.resolve('./build/asset-manifest.json'), 'utf8'));
 
@@ -66,8 +68,8 @@ app.use(serverRender);
 
 // 5000 포트로 서버를 가동합니다.
 
-app.listen(5000, () => {
-  console.log('Running on http://localhost:5000');
+app.listen(port, () => {
+  console.log(`Server is listening on port : ${port}`);
 });
 
 const html = ReactDOMServer.renderToString(<div>Hello Server Side Rendering</div>);
