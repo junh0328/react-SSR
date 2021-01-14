@@ -8,18 +8,23 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
 import rootReducer, { rootSaga } from './modules';
+import { composeWithDevTools } from 'redux-devtools-extension'; // 리덕스 개발자 도구
 
 const sagaMiddleware = createSagaMiddleware();
 
-const store = createStore(rootReducer, window.__PRELOADED_STATE__, applyMiddleware(thunk, sagaMiddleware)); // 루트 리듀서에 thunk 미들웨어를 적용하겠다.
+const store = createStore(rootReducer, window.__PRELOADED_STATE__, composeWithDevTools(applyMiddleware(thunk, sagaMiddleware)));
+
 sagaMiddleware.run(rootSaga);
 
 ReactDOM.render(
-  <Provider store={store}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </Provider>,
+  <React.StrictMode>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
+    ,
+  </React.StrictMode>,
   document.getElementById('root')
 );
 

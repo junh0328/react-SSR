@@ -9,7 +9,7 @@ function App() {
   return (
     <div>
       <Menu />
-      <ht />
+      <hr />
       <Route path="/red" component={RedPage} />
       <Route path="/blue" component={BluePage} />
       <Route path="/users" component={UsersPage} />

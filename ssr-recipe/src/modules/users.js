@@ -1,15 +1,15 @@
 import axios from 'axios';
 import { call, put, takeEvery } from 'redux-saga/effects';
 
-const GET_USERS_LOADING = 'GET_USERS_LOADING';
-const GET_USERS_SUCCESS = 'GET_USERS_SUCCESS';
-const GET_USERS_FAILURE = 'GET_USERS_FAILURE';
+const GET_USERS_PENDING = 'users/GET_USERS_PENDING';
+const GET_USERS_SUCCESS = 'users/GET_USERS_SUCCESS';
+const GET_USERS_FAILURE = 'users/GET_USERS_FAILURE';
 
-const GET_USER = 'GET_USER';
-const GET_USER_SUCCESS = 'GET_USER_SUCCESS';
-const GET_USER_FAILURE = 'GET_USER_FAILURE';
+const GET_USER = 'users/GET_USER';
+const GET_USER_SUCCESS = 'users/GET_USER_SUCCESS';
+const GET_USER_FAILURE = 'users/GET_USER_FAILURE';
 
-const getUsersLoading = () => ({ type: GET_USERS_LOADING });
+const getUsersPending = () => ({ type: GET_USERS_PENDING });
 const getUsersSuccess = (payload) => ({ type: GET_USERS_SUCCESS, payload });
 const getUsersFailure = (payload) => ({
   type: GET_USERS_FAILURE,
@@ -21,26 +21,22 @@ export const getUser = (id) => ({ type: GET_USER, payload: id });
 const getUserSuccess = (data) => ({ type: GET_USER_SUCCESS, payload: data });
 const getUserFailure = (error) => ({
   type: GET_USER_FAILURE,
-  error: true,
   payload: error,
+  error: true,
 });
 
 export const getUsers = () => async (dispatch) => {
   try {
-    dispatch(getUsersLoading());
+    dispatch(getUsersPending());
     const response = await axios.get('https://jsonplaceholder.typicode.com/users');
     dispatch(getUsersSuccess(response));
-    console.log('유저 정보 가져옴');
-  } catch (error) {
-    dispatch(getUsersFailure(error));
-    throw error;
+  } catch (e) {
+    dispatch(getUsersFailure(e));
+    throw e;
   }
 };
 
-const getUserById = (id) => {
-  axios.get(`https://jsonplaceholder.typicode.com/users/${id}`);
-  console.log(`getUser(${id})번 유저 정보 호출!`);
-};
+const getUserById = (id) => axios.get(`https://jsonplaceholder.typicode.com/users/${id}`);
 
 function* getUserSaga(action) {
   try {
@@ -51,13 +47,12 @@ function* getUserSaga(action) {
   }
 }
 
-export function* userSaga() {
+export function* usersSaga() {
   yield takeEvery(GET_USER, getUserSaga);
 }
 
 const initialState = {
   users: null,
-  user: null,
   loading: {
     users: false,
     user: false,
@@ -70,8 +65,12 @@ const initialState = {
 
 function users(state = initialState, action) {
   switch (action.type) {
-    case GET_USERS_LOADING:
-      return { ...state, loading: { ...state.loading, users: true } };
+    case GET_USERS_PENDING:
+      return {
+        ...state,
+        loading: { ...state.loading, users: true },
+        error: { ...state.error, users: null },
+      };
     case GET_USERS_SUCCESS:
       return {
         ...state,
