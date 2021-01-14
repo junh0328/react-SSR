@@ -21,11 +21,25 @@ const publicUrlOrPath = getPublicUrlOrPath(
   process.env.PUBLIC_URL
 );
 
-const moduleFileExtensions = ['web.mjs', 'mjs', 'web.js', 'js', 'web.ts', 'ts', 'web.tsx', 'tsx', 'json', 'web.jsx', 'jsx'];
+const moduleFileExtensions = [
+  'web.mjs',
+  'mjs',
+  'web.js',
+  'js',
+  'web.ts',
+  'ts',
+  'web.tsx',
+  'tsx',
+  'json',
+  'web.jsx',
+  'jsx',
+];
 
 // Resolve file paths in the same order as webpack
 const resolveModule = (resolveFn, filePath) => {
-  const extension = moduleFileExtensions.find((extension) => fs.existsSync(resolveFn(`${filePath}.${extension}`)));
+  const extension = moduleFileExtensions.find((extension) =>
+    fs.existsSync(resolveFn(`${filePath}.${extension}`))
+  );
 
   if (extension) {
     return resolveFn(`${filePath}.${extension}`);
@@ -50,10 +64,10 @@ module.exports = {
   testsSetup: resolveModule(resolveApp, 'src/setupTests'),
   proxySetup: resolveApp('src/setupProxy.js'),
   appNodeModules: resolveApp('node_modules'),
-  ssrIndexJs: resolveApp('src/index.server.js'), // 서버 사이드 렌더링 엔트리
-  ssrBuild: resolveApp('dist'), // 웹팩 처리 후 저장 경로
   swSrc: resolveModule(resolveApp, 'src/service-worker'),
   publicUrlOrPath,
+  ssrIndexJs: resolveApp('src/index.server.js'),
+  ssrBuild: resolveApp('dist'),
 };
 
 module.exports.moduleFileExtensions = moduleFileExtensions;

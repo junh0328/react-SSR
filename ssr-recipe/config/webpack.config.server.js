@@ -15,7 +15,6 @@ module.exports = {
   mode: 'production', // 프로덕션 모드로 설정하여 최적화 옵션들을 활성화
   entry: paths.ssrIndexJs, // 엔트리 경로
   target: 'node', // node 환경에서 실행될 것이라는 점을 명시
-
   output: {
     path: paths.ssrBuild, // 빌드 경로
     filename: 'server.js', // 파일 이름
@@ -147,7 +146,11 @@ module.exports = {
   resolve: {
     modules: ['node_modules'],
   },
-  externals: [nodeExternals()],
+  externals: [
+    nodeExternals({
+      allowlist: [/@babel/],
+    }),
+  ],
   plugins: [
     new webpack.DefinePlugin(env.stringified), // 환경변수를 주입해줍니다.
   ],
